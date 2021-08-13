@@ -15,14 +15,13 @@ stages:
     jobs:
     - job: TerraformValidateJob
       continueOnError: false
-      steps:
 ## Step-1: Publish Artifacts to Pipeline (Pipeline artifacts provide a way to share files between stages in a pipeline or between different pipelines. )
+      steps:  
       - task: PublishPipelineArtifact@1
         displayName: Publish artifacts
         inputs:
           targetPath: '$(System.DefaultWorkingDirectory)/terraform-manifest'
-          artifact: 'pipeline'
-          publishLocation: 'pipeline'
+          artifact: 'terraform-manifest-out'
 ## Step-2: Install Latest Terraform (0.13.5) (Ideally not needed if we use default Ubuntu Agents)
       - task: TerraformInstaller@0
         inputs:
