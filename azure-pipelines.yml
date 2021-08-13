@@ -20,8 +20,9 @@ stages:
       - task: PublishPipelineArtifact@1
         displayName: Publish artifacts
         inputs:
-          targetPath: '$(System.DefaultWorkingDirectory)/terraform-manifest'
+          targetPath: '$(Pipeline.Workspace)/terraform-manifest'
           artifact: 'terraform-manifest-out'
+          publishLocation: 'pipeline'
 ## Step-2: Install Latest Terraform (0.13.5) (Ideally not needed if we use default Ubuntu Agents)
       - task: TerraformInstaller@0
         inputs:
@@ -29,7 +30,7 @@ stages:
       - task: TerraformCLI@0
         inputs:
           command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifest'
+          workingDirectory: '$(Pipeline.Workspace)/terraform-manifest'
           backendType: 'azurerm'
           backendServiceArm: 'terraform'
           ensureBackend: true
@@ -43,5 +44,5 @@ stages:
       - task: TerraformCLI@0
         inputs:
           command: 'validate'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifest'
+          workingDirectory: '$(Pipeline.Workspace)/terraform-manifest'
           allowTelemetryCollection: false
