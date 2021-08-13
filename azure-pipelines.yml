@@ -20,7 +20,7 @@ stages:
       - task: PublishPipelineArtifact@1
         displayName: Publish artifacts
         inputs:
-          targetPath: '$(System.DefaultWorkingDirectory)/*'
+          targetPath: '$(System.DefaultWorkingDirectory)/terraform-manifests'
           artifact: 'pipeline'
           publishLocation: 'pipeline'
 ## Step-2: Install Latest Terraform (0.13.5) (Ideally not needed if we use default Ubuntu Agents)
