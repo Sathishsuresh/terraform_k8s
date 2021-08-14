@@ -1,0 +1,48 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+# Stage-1: Terraform Validate Stage
+stages:
+  - stage: TerraformValidate
+    jobs:
+    - job: TerraformValidateJob
+      continueOnError: false
+## Step-1: Publish Artifacts to Pipeline (Pipeline artifacts provide a way to share files between stages in a pipeline or between different pipelines. )
+      steps:  
+      - task: PublishPipelineArtifact@1
+        displayName: Publish artifacts
+        inputs:
+          targetPath: '$(Pipeline.Workspace)/terraform-manifest'
+          artifact: 'terraform-manifest-out'
+          publishLocation: 'pipeline'
+## Step-2: Install Latest Terraform (0.13.5) (Ideally not needed if we use default Ubuntu Agents)
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformCLI@0
+        inputs:
+          command: 'init'
+          workingDirectory: '$(Pipeline.Workspace)/terraform-manifest'
+          backendType: 'azurerm'
+          backendServiceArm: 'terraform'
+          ensureBackend: true
+          backendAzureRmResourceGroupName: 'terraform-storage-rg'
+          backendAzureRmResourceGroupLocation: 'eastus'
+          backendAzureRmStorageAccountName: 'terraform-storage-rg'
+          backendAzureRmContainerName: 'tfstatefiles'
+          backendAzureRmKey: 'aks-base.tfstate'
+          allowTelemetryCollection: false
+## Step-3: Validate Terraform Manifests (terraform init, terraform validate)
+      - task: TerraformCLI@0
+        inputs:
+          command: 'validate'
+          workingDirectory: '$(Pipeline.Workspace)/terraform-manifest'
+          allowTelemetryCollection: false
