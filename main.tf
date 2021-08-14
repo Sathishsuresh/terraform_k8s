@@ -45,12 +45,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     node_count           = 1
     vm_size              = "Standard_DS2_v2"
     vnet_subnet_id       = azurerm_subnet.internal.id
-    availability_zones   = [1]
-    enable_auto_scaling  = true
-    max_count            = 2
-    min_count            = 1
-    os_disk_size_gb      = 30
-    type                 = "VirtualMachineScaleSets"
   }
 
   network_profile {
