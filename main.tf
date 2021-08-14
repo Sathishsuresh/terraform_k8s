@@ -82,11 +82,4 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 }
 
-resource "azurerm_kubernetes_cluster_node_pool" "user" {
-  name                  = "user"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
-  vm_size               = "Standard_DS2_v2"
-  node_count            = 1
-  vnet_subnet_id        = azurerm_subnet.internal.id
-}
 

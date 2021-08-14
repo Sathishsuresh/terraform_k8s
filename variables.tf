@@ -4,7 +4,7 @@ variable location {
 
 variable "prefix" {
   description = "A prefix used for all resources in this example"
-  default = "akscalico"
+  default = "aksdemo"
 }
 variable "ssh_public_key" {
   default = "./.ssh/id_rsa.pub"
