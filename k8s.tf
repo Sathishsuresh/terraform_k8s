@@ -6,7 +6,7 @@ data "azurerm_kubernetes_cluster" "k8s" {
   ]
 }
 
-provider "kubernetes" {
+provider "kubectl" {
   load_config_file       = false
   host                   = azurerm_kubernetes_cluster.k8s.kube_config.0.host
   client_certificate     = base64decode(data.azurerm_kubernetes_cluster.k8s.kube_config.0.client_certificate)
@@ -15,39 +15,12 @@ provider "kubernetes" {
 
 }
 
+data "kubectl_path_documents" "manifests" {
+    pattern = "${path.module}/manifests/*.yaml"
+}
 
-
-resource "kubernetes_deployment" "example" {
-  metadata {
-    name = "terraform-example"
-    labels = {
-      test = "MyExampleApp"
-    }
-  }
-
-  spec {
-    replicas = 3
-
-    selector {
-      match_labels = {
-        test = "MyExampleApp"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          test = "MyExampleApp"
-        }
-      }
-
-      spec {
-        container {
-          image = "nginx:1.7.8"
-          name  = "example"
-          }
-        }
-      }
-    }
- }
+resource "kubectl_manifest" "test" {
+    count     = length(data.kubectl_path_documents.manifests.documents)
+    yaml_body = element(data.kubectl_path_documents.manifests.documents, count.index)
+}
 

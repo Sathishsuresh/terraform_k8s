@@ -7,7 +7,7 @@ variable "prefix" {
   default = "aksdemo"
 }
 variable "ssh_public_key" {
-  default = "./.ssh/id_rsa.pub"
+  #default = "./.ssh/id_rsa.pub"
   description = "This variable defines the SSH Public Key for Linux k8s Worker nodes"  
 }
 
