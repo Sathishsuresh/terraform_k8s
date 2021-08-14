@@ -1,6 +1,9 @@
 data "azurerm_kubernetes_cluster" "k8s" {
   name                = "${var.prefix}-k8s"
   resource_group_name = azurerm_resource_group.k8rg.name
+  depends_on = [
+    azurerm_kubernetes_cluster.k8s
+  ]
 }
 
 provider "kubernetes" {
