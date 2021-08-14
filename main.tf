@@ -44,19 +44,17 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   resource_group_name = azurerm_resource_group.k8rg.name
   dns_prefix          = "${var.prefix}-k8s"
 
-  linux_profile {
-        admin_username = "ubuntu"
-
-        ssh_key {
-            key_data = file("${path.module}/.ssh/id_rsa.pub")
-        }
-  }
-
   default_node_pool {
-    name           = "system"
-    node_count     = 1
-    vm_size        = "Standard_DS2_v2"
-    vnet_subnet_id = azurerm_subnet.internal.id
+    name                 = "system"
+    node_count           = 1
+    vm_size              = "Standard_DS2_v2"
+    vnet_subnet_id       = azurerm_subnet.internal.id
+    availability_zones   = [1]
+    enable_auto_scaling  = true
+    max_count            = 2
+    min_count            = 1
+    os_disk_size_gb      = 30
+    type                 = "VirtualMachineScaleSets"
   }
 
   network_profile {
@@ -84,6 +82,13 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     oms_agent {
       enabled = false
     }
+  }
+    linux_profile {
+        admin_username = "ubuntu"
+
+        ssh_key {
+            key_data = file(var.ssh_public_key)
+        }
   }
 }
 
