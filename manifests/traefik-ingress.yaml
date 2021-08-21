@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik-web-ui
+  labels:
+    name: traefik-web-ui
+spec:
+  rules:
+  - host: demo.guardians.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: demo-service
+            port: 
+              number: 80
+  - host: welcome.guardians.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: guardians-service
+            port: 
+              number: 80
+  - host: hello.guardians.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: hello-service
+            port: 
+              number: 80
