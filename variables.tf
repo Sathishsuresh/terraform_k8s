@@ -1,5 +1,5 @@
 variable location {
-  default = "eastus"
+  default = "westus"
 }
 
 variable "prefix" {
